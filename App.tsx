@@ -1,16 +1,13 @@
 import React, { useMemo, useState } from 'react';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import {
+  SafeAreaProvider,
   SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+} from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 
 import Display from './src/components/Display';
 import Keypad, { KeyDef } from './src/components/Keypad';
-import CalcButton from './src/components/CalcButton';
 import InputModal, { ModalField } from './src/components/InputModal';
 import { BASIC_ROWS, SCIENTIFIC_ROWS } from './src/keyLayouts';
 import { theme } from './src/theme';
@@ -242,61 +239,85 @@ export default function App() {
   const activeModalConfig = modalKind ? MODAL_CONFIGS[modalKind] : null;
 
   return (
-    <SafeAreaView style={styles.safe}>
-      <StatusBar style="light" />
-      <View style={styles.container}>
-        {/* Header with mode toggle */}
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.safe} edges={['top', 'bottom', 'left', 'right']}>
+        <StatusBar style="light" />
+        <View style={styles.container}>
+        {/* Header: angle-unit indicator + Basic/Scientific segmented control */}
         <View style={styles.header}>
-          <Text style={styles.appTitle}>Calculator</Text>
-          <CalcButton
-            label={scientific ? 'BASIC' : 'SCI'}
-            variant="toggle"
-            onPress={() => setScientific((s) => !s)}
-            style={styles.toggle}
-            flex={0}
-          />
+          <View style={styles.degPill}>
+            <Text style={styles.degText}>DEG</Text>
+          </View>
+
+          <View style={styles.segment}>
+            {(['Basic', 'Sci'] as const).map((mode) => {
+              const active =
+                (mode === 'Sci' && scientific) ||
+                (mode === 'Basic' && !scientific);
+              return (
+                <Pressable
+                  key={mode}
+                  onPress={() => setScientific(mode === 'Sci')}
+                  style={[styles.segmentBtn, active && styles.segmentBtnActive]}
+                >
+                  <Text
+                    style={[
+                      styles.segmentText,
+                      active && styles.segmentTextActive,
+                    ]}
+                  >
+                    {mode}
+                  </Text>
+                </Pressable>
+              );
+            })}
+          </View>
         </View>
 
-        {/* Display */}
-        <View style={styles.displayArea}>
+        {/* Display — flex-grows so the value bottom-aligns just above the keys */}
+        <View
+          style={[
+            styles.displayArea,
+            scientific ? styles.displayAreaSci : styles.displayAreaBasic,
+          ]}
+        >
           <Display
-            expression={
-              isError
-                ? expression
-                : justEvaluated
-                ? expression
-                : expression + (livePreview ? `\n= ${livePreview}` : '')
-            }
+            expression={expression}
+            preview={livePreview}
             result={result}
             isError={isError}
+            justEvaluated={justEvaluated}
           />
         </View>
 
-        {/* Keys */}
-        <ScrollView
-          style={styles.keysScroll}
-          contentContainerStyle={styles.keysContent}
-          showsVerticalScrollIndicator={false}
-        >
-          {scientific && (
-            <View style={styles.sciSection}>
+        {/* Keys — fill the rest of the screen; no scroll, no gaps */}
+        {scientific ? (
+          <View style={styles.keypadAreaSci}>
+            <View style={styles.sciKeypad}>
               <Keypad rows={SCIENTIFIC_ROWS} onKey={handleKey} />
             </View>
-          )}
-          <Keypad rows={BASIC_ROWS} onKey={handleKey} />
-        </ScrollView>
+            <View style={styles.basicKeypadSci}>
+              <Keypad rows={BASIC_ROWS} onKey={handleKey} />
+            </View>
+          </View>
+        ) : (
+          <View style={styles.keypadAreaBasic}>
+            <Keypad rows={BASIC_ROWS} onKey={handleKey} />
+          </View>
+        )}
       </View>
 
-      {/* Multi-input operations modal */}
-      <InputModal
-        visible={modalKind !== null}
-        title={activeModalConfig?.title ?? ''}
-        description={activeModalConfig?.description}
-        fields={activeModalConfig?.fields ?? []}
-        onSubmit={handleModalSubmit}
-        onCancel={() => setModalKind(null)}
-      />
-    </SafeAreaView>
+        {/* Multi-input operations modal */}
+        <InputModal
+          visible={modalKind !== null}
+          title={activeModalConfig?.title ?? ''}
+          description={activeModalConfig?.description}
+          fields={activeModalConfig?.fields ?? []}
+          onSubmit={handleModalSubmit}
+          onCancel={() => setModalKind(null)}
+        />
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 
@@ -308,37 +329,78 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 8,
+    paddingHorizontal: theme.spacing.sm,
+    paddingBottom: theme.spacing.sm,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 8,
+    paddingHorizontal: theme.spacing.md,
+    paddingTop: theme.spacing.sm,
+    paddingBottom: theme.spacing.xs,
   },
-  appTitle: {
-    color: theme.colors.resultText,
-    fontSize: 20,
+  degPill: {
+    paddingHorizontal: 14,
+    paddingVertical: 7,
+    borderRadius: theme.radius.pill,
+    backgroundColor: theme.colors.surfaceElevated,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: theme.colors.borderStrong,
+  },
+  degText: {
+    color: theme.colors.accent,
+    fontSize: 12,
+    fontWeight: '700',
+    letterSpacing: 1.5,
+  },
+  segment: {
+    flexDirection: 'row',
+    backgroundColor: theme.colors.toggleTrack,
+    borderRadius: theme.radius.pill,
+    padding: 4,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: theme.colors.border,
+  },
+  segmentBtn: {
+    paddingHorizontal: 18,
+    paddingVertical: 7,
+    borderRadius: theme.radius.pill,
+    minWidth: 64,
+    alignItems: 'center',
+  },
+  segmentBtnActive: {
+    backgroundColor: theme.colors.toggleActiveBg,
+  },
+  segmentText: {
+    color: theme.colors.toggleInactiveText,
+    fontSize: 14,
     fontWeight: '600',
   },
-  toggle: {
-    paddingHorizontal: 18,
-    minWidth: 86,
-    height: 44,
-    margin: 0,
+  segmentTextActive: {
+    color: theme.colors.toggleActiveText,
+    fontWeight: '700',
   },
   displayArea: {
-    minHeight: 150,
     justifyContent: 'flex-end',
+    minHeight: 110,
   },
-  keysScroll: {
-    flex: 1,
+  displayAreaBasic: {
+    flex: 3,
   },
-  keysContent: {
-    justifyContent: 'flex-end',
-    paddingBottom: 12,
+  displayAreaSci: {
+    flex: 2,
   },
-  sciSection: {
-    marginBottom: 4,
+  keypadAreaBasic: {
+    flex: 5,
+  },
+  keypadAreaSci: {
+    flex: 9,
+  },
+  sciKeypad: {
+    flex: 5,
+  },
+  basicKeypadSci: {
+    flex: 6,
   },
 });
