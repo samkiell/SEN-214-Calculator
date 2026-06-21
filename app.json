@@ -15,7 +15,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.samkiel.sen214calculator"
     },
     "android": {
       "package": "com.samkiel.sen214calculator",
