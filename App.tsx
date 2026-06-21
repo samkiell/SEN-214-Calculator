@@ -257,20 +257,17 @@ export default function App() {
           />
         </View>
 
-        {/* Display: large result on top, expression below.
-            Before "=", the top line shows the live preview (if the
-            expression currently evaluates); after "=", it shows the
-            committed result. */}
+        {/* Display */}
         <View style={styles.displayArea}>
           <Display
-            expression={expression}
-            result={
+            expression={
               isError
-                ? 'Error'
+                ? expression
                 : justEvaluated
-                ? result
-                : livePreview || result
+                ? expression
+                : expression + (livePreview ? `\n= ${livePreview}` : '')
             }
+            result={result}
             isError={isError}
           />
         </View>
