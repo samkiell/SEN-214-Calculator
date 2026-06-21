@@ -74,5 +74,8 @@ export const SCIENTIFIC_ROWS: KeyDef[][] = [
   [
     { label: 'σ²', variant: 'function', action: 'stats-var' },
     { label: 'σ', variant: 'function', action: 'stats-std' },
+    { label: '', spacer: true },
+    { label: '', spacer: true },
+    { label: '', spacer: true },
   ],
 ];
