@@ -2,7 +2,7 @@
   "expo": {
     "name": "Calculator",
     "slug": "sen-214-calculator",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
     "icon": "./assets/icon.png",
