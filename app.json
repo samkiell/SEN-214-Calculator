@@ -18,6 +18,7 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.samkiel.sen214calculator",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#0d0d0f"
@@ -29,6 +30,12 @@
     },
     "plugins": [
       "expo-font"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "8e6b07a7-5299-40a6-92b0-0bdf4bf17c7b"
+      }
+    },
+    "owner": "samkiel"
   }
 }
