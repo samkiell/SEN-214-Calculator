@@ -1,0 +1,27 @@
+{
+  "expo": {
+    "name": "Calculator",
+    "slug": "sen-214-calculator",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#0d0d0f"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#0d0d0f"
+      }
+    },
+    "web": {
+      "bundler": "metro"
+    }
+  }
+}
