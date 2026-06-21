@@ -5,6 +5,11 @@ import {
   SafeAreaView,
 } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
+import {
+  useFonts,
+  Orbitron_500Medium,
+  Orbitron_700Bold,
+} from '@expo-google-fonts/orbitron';
 
 import Display from './src/components/Display';
 import Keypad, { KeyDef } from './src/components/Keypad';
@@ -92,6 +97,7 @@ const MODAL_CONFIGS: Record<Exclude<ModalKind, null>, ModalConfig> = {
 };
 
 export default function App() {
+  const [fontsLoaded] = useFonts({ Orbitron_500Medium, Orbitron_700Bold });
   const [expression, setExpression] = useState('');
   const [result, setResult] = useState('0');
   const [isError, setIsError] = useState(false);
@@ -237,6 +243,11 @@ export default function App() {
   };
 
   const activeModalConfig = modalKind ? MODAL_CONFIGS[modalKind] : null;
+
+  // Hold a blank dark screen until the digital font is ready (avoids a flash).
+  if (!fontsLoaded) {
+    return <View style={styles.safe} />;
+  }
 
   return (
     <SafeAreaProvider>
