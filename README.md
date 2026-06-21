@@ -1,6 +1,7 @@
 # Calculator
 
-[![Download APK](https://img.shields.io/github/v/release/samkiell/SEN-214-Calculator?label=Download%20APK&logo=android&color=FF9F45)](https://github.com/samkiell/SEN-214-Calculator/releases/latest)
+[![Latest release](https://img.shields.io/github/v/release/samkiell/SEN-214-Calculator?label=latest%20release&logo=github&color=FF9F45)](https://github.com/samkiell/SEN-214-Calculator/releases/latest)
+[![Android APK](https://img.shields.io/badge/Android-APK%20v1.0.0-3DDC84?logo=android&logoColor=white)](https://github.com/samkiell/SEN-214-Calculator/releases/download/v1.0.0/Calculator-v1.0.0.apk)
 [![Built with EAS](https://img.shields.io/badge/Built%20with-EAS%20Build-4630EB?logo=expo&logoColor=white)](https://expo.dev/accounts/samkiel/projects/sen-214-calculator)
 
 A mobile calculator built with **React Native (Expo)** and **TypeScript** for the **SEN 214** mobile development assignment. It supports basic arithmetic plus a full scientific mode — all math is computed with JavaScript's built-in `Math` object, no external math libraries.
@@ -11,13 +12,28 @@ A mobile calculator built with **React Native (Expo)** and **TypeScript** for th
 
 ## Download
 
-📲 **[Download the latest Android APK](https://github.com/samkiell/SEN-214-Calculator/releases/latest)** — or grab [`Calculator-v1.0.0.apk` directly](https://github.com/samkiell/SEN-214-Calculator/releases/download/v1.0.0/Calculator-v1.0.0.apk) (~56 MB).
+### Android — installable APK
+
+📲 **[Download `Calculator-v1.0.0.apk`](https://github.com/samkiell/SEN-214-Calculator/releases/download/v1.0.0/Calculator-v1.0.0.apk)** (~56 MB) from the [v1.0.0 release](https://github.com/samkiell/SEN-214-Calculator/releases/tag/v1.0.0).
 
 1. Download the `.apk` onto your Android device.
 2. Open it and allow installing from unknown sources if prompted.
 3. Launch **Calculator**.
 
-> It's an internal-distribution build, so Android may warn that it's from an unknown developer — that's expected for a sideloaded app. Prefer to run from source instead? See [Getting started](#getting-started).
+> It's an internal-distribution build, so Android may warn that it's from an unknown developer — that's expected for a sideloaded app.
+
+### iOS — Simulator build
+
+The [v1.0.1 release](https://github.com/samkiell/SEN-214-Calculator/releases/tag/v1.0.1) includes an **iOS Simulator** build (`.tar.gz`) that runs in Xcode's Simulator on macOS. It is **not** installable on a physical iPhone — a real device `.ipa` requires a paid Apple Developer account for code-signing.
+
+```bash
+tar -xzf Calculator-v1.0.1-iOS-Simulator.tar.gz      # -> Calculator.app
+xcrun simctl boot "iPhone 15"                         # or open Simulator.app
+xcrun simctl install booted Calculator.app
+xcrun simctl launch booted com.samkiel.sen214calculator
+```
+
+Prefer to run from source on any platform? See [Getting started](#getting-started).
 
 ---
 
